@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build: ./app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./app:/app
+      - ./storage:/storage 
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  worker:
+    build: ./worker
+    command: celery -A tasks worker --loglevel=info
+    volumes:
+      - ./worker:/worker
+      - ./storage:/storage 
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0

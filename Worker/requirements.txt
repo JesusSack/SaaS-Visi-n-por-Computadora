@@ -1,0 +1,4 @@
+celery
+redis
+opencv-python-headless  # Headless es vital para servidores (sin GUI)
+numpy
