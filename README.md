@@ -18,17 +18,22 @@ Unlike a standard web application, this solution implements a **non-blocking asy
 
 The system follows a microservices-inspired architecture to ensure "Clean Code" and separation of concerns:
 
-```mermaid
-graph LR
-    User["Client / Frontend"] -- Upload Image --> API["FastAPI Backend"]
-    API -- Save File --> Storage["Shared Volume / S3"]
-    API -- Enqueue Task --> Redis["Redis Broker"]
-    Redis -- Pop Task --> Worker["Celery Worker"]
-    Worker -- Read Image --> Storage
-    Worker -- "Process (OpenCV)" --> Worker
-    Worker -- Save Output --> Storage
+```text
++--------+          +-------------+           +------------------+
+| Client | -------> | API Service | --------> | Storage (S3/Vol) |
++--------+          +-------------+           +------------------+
+                           |                            ^
+                           | (Enqueue Task)             | (Save Image)
+                           v                            |
+                    +-------------+           +------------------+
+                    | Redis Queue | --------> |  Celery Worker   |
+                    +-------------+           +------------------+
+                                                 (OpenCV Process)
 
-    
+
+
+
+
 1.API Service (FastAPI): Handles HTTP requests, validation, and file uploads. It responds immediately with a task_id.
 
 2.Message Broker (Redis): Acts as a queue buffer, managing the load between the API and the Workers.
