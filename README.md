@@ -20,12 +20,12 @@ The system follows a microservices-inspired architecture to ensure "Clean Code" 
 
 ```mermaid
 graph LR
-    User[Client / Frontend] -- Upload Image --> API[FastAPI Backend]
-    API -- Save File --> Storage[Shared Volume / S3]
-    API -- Enqueue Task --> Redis[Redis Broker]
-    Redis -- Pop Task --> Worker[Celery Worker]
+    User["Client / Frontend"] -- Upload Image --> API["FastAPI Backend"]
+    API -- Save File --> Storage["Shared Volume / S3"]
+    API -- Enqueue Task --> Redis["Redis Broker"]
+    Redis -- Pop Task --> Worker["Celery Worker"]
     Worker -- Read Image --> Storage
-    Worker -- Process (OpenCV) --> Worker
+    Worker -- "Process (OpenCV)" --> Worker
     Worker -- Save Output --> Storage
 
 
