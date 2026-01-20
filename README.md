@@ -28,6 +28,7 @@ graph LR
     Worker -- "Process (OpenCV)" --> Worker
     Worker -- Save Output --> Storage
 
+    
 1.API Service (FastAPI): Handles HTTP requests, validation, and file uploads. It responds immediately with a task_id.
 
 2.Message Broker (Redis): Acts as a queue buffer, managing the load between the API and the Workers.
